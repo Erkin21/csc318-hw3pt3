@@ -1,8 +1,8 @@
 // Get reference to the display element
-const display = document.querySelector('.display');
+const display = document.querySelector(".display");
 
 // Get all the buttons
-const buttons = document.querySelectorAll('.button');
+const buttons = document.querySelectorAll(".button");
 
 // Flag to check if a function button was pressed
 let functionPressed = false;
@@ -11,20 +11,24 @@ let functionPressed = false;
 let numberPressed = false;
 
 // Add click event listener to each button
-buttons.forEach(button => {
-  button.addEventListener('click', () => {
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
     // Get the value of the custom data-value attribute from the button
-    const buttonValue = button.getAttribute('data-value');
+    const buttonValue = button.getAttribute("data-value");
 
     // Remove leading zero if necessary
-    if (display.textContent === '0' && buttonValue !== '0') {
-      display.textContent = '';
+    if (display.textContent === "0" && buttonValue !== "0") {
+      display.textContent = "";
     }
 
     // Handle different button actions
-    if (buttonValue === '=') {
+    if (buttonValue === "=") {
       // Perform calculation and display the result
-      let expression = display.textContent.replace('%', '/100').replace(/×/g, '*').replace(/\^/g, '**').replace(/√/g, 'Math.sqrt');
+      let expression = display.textContent
+        .replace("%", "/100")
+        .replace(/×/g, "*")
+        .replace(/\^/g, "**")
+        .replace(/√/g, "Math.sqrt");
       expression = handleMultiplication(expression);
       try {
         let result = eval(expression);
@@ -32,97 +36,117 @@ buttons.forEach(button => {
         result = parseFloat(result).toString(); // Remove trailing zeros until 2 decimal places
         display.textContent = result;
       } catch (error) {
-        display.textContent = 'Error';
-        console.error('An error occurred during calculation:', error);
+        display.textContent = "Error";
+        console.error("An error occurred during calculation:", error);
       }
-    } else if (buttonValue === 'AC') {
+    } else if (buttonValue === "AC") {
       // Clear the display and reset the error message
-      display.textContent = '0';
+      display.textContent = "0";
       functionPressed = false;
       numberPressed = false;
-    } else if (display.textContent === 'Error' || display.textContent === 'NaN' || display.textContent === 'null') {
+    } else if (
+      display.textContent === "Error" ||
+      display.textContent === "NaN" ||
+      display.textContent === "null"
+    ) {
       // Clear the error message and update the display with the clicked button value
       display.textContent = buttonValue;
-    } else if (buttonValue === '-') {
+    } else if (buttonValue === "-") {
       // Append the subtraction operator to the display
       display.textContent += buttonValue;
-    } else if (buttonValue === '÷') {
+    } else if (buttonValue === "÷") {
       // Append the division operator to the display
-      display.textContent += '/';
-    } else if (buttonValue === '×') {
+      display.textContent += "/";
+    } else if (buttonValue === "×") {
       // Append the multiplication operator to the display
       const lastChar = display.textContent.slice(-1);
-      if (lastChar !== '×' && lastChar !== '/' && lastChar !== '+' && lastChar !== '-' && lastChar !== '(') {
-        display.textContent += '×';
+      if (
+        lastChar !== "×" &&
+        lastChar !== "/" &&
+        lastChar !== "+" &&
+        lastChar !== "-" &&
+        lastChar !== "("
+      ) {
+        display.textContent += "×";
       }
-    } else if (buttonValue === 'x!') {
+    } else if (buttonValue === "x!") {
       // Calculate factorial and display the result
       const number = parseFloat(display.textContent);
       const result = calculateFactorial(number);
       display.textContent = result;
-    } else if (buttonValue === 'x^y') {
+    } else if (buttonValue === "x^y") {
       // Append the exponentiation operator to the display
-      display.textContent += '^';
-    } else if (buttonValue === '(') {
+      display.textContent += "^";
+    } else if (buttonValue === "(") {
       // Append the opening parenthesis
-      display.textContent += '(';
-    } else if (buttonValue === ')') {
+      display.textContent += "(";
+    } else if (buttonValue === ")") {
       // Append the closing parenthesis
-      display.textContent += ')';
-    } else if (buttonValue === 'log') {
+      display.textContent += ")";
+    } else if (buttonValue === "log") {
       // Check if there's a number before the log function
       const lastChar = display.textContent.slice(-1);
-      if (numberPressed && lastChar !== ' ') {
+      if (numberPressed && lastChar !== " ") {
         // Append multiplication operator before the log function
-        display.textContent += '×';
+        display.textContent += "×";
       }
       // Append the base-10 logarithm function to the display
-      display.textContent += 'log(';
+      display.textContent += "log(";
       functionPressed = true;
-    } else if (buttonValue === 'sin') {
+    } else if (buttonValue === "sin") {
       // Check if there's a number before the sin function
       const lastChar = display.textContent.slice(-1);
-      if (numberPressed && lastChar !== ' ') {
+      if (numberPressed && lastChar !== "0") {
         // Append multiplication operator before the sin function
-        display.textContent += '×';
+        display.textContent += "×";
       }
       // Append the sine function to the display
-      display.textContent += 'sin(';
+      display.textContent += "sin(";
       functionPressed = true;
-    } else if (buttonValue === 'cos') {
+    } else if (buttonValue === "cos") {
       // Check if there's a number before the cos function
       const lastChar = display.textContent.slice(-1);
-      if (numberPressed && lastChar !== ' ') {
+      if (numberPressed && lastChar !== "0") {
         // Append multiplication operator before the cos function
-        display.textContent += '×';
+        display.textContent += "×";
       }
       // Append the cosine function to the display
-      display.textContent += 'cos(';
+      display.textContent += "cos(";
       functionPressed = true;
-    } else if (buttonValue === 'tan') {
+    } else if (buttonValue === "tan") {
       // Check if there's a number before the tan function
       const lastChar = display.textContent.slice(-1);
-      if (numberPressed && lastChar !== ' ') {
+      if (numberPressed && lastChar !== "0") {
         // Append multiplication operator before the tan function
-        display.textContent += '×';
+        display.textContent += "×";
       }
       // Append the tangent function to the display
-      display.textContent += 'tan(';
+      display.textContent += "tan(";
       functionPressed = true;
-    } else if (buttonValue === 'EXP') {
+    } else if (buttonValue === "EXP") {
       // Append the exponent notation
-      display.textContent += 'E';
+      display.textContent += "E";
       functionPressed = false;
       numberPressed = false;
-    } else if (buttonValue === '√') {
+    } else if (buttonValue === "√") {
       // Check if there's a number before the square root function
       const lastChar = display.textContent.slice(-1);
-      if (numberPressed && lastChar !== ' ') {
+      if (numberPressed && lastChar !== "0") {
         // Append multiplication operator before the square root function
-        display.textContent += '×';
+        display.textContent += "×";
       }
       // Append the square root function to the display
-      display.textContent += '√(';
+      display.textContent += "√(";
+      functionPressed = true;
+    } else if (buttonValue === "ln") {
+      // Check if there's a number before the ln function
+      const lastChar = display.textContent.slice(-1);
+      if (numberPressed && lastChar !== "0") {
+        // Append multiplication operator before the ln function
+        display.textContent += "×";
+      }
+      // Append the natural logarithm function to the display
+      display.textContent += "ln(";
       functionPressed = true;
     } else {
       // Update the display with the clicked button value
@@ -138,14 +162,14 @@ buttons.forEach(button => {
 // Function to handle multiplication for expressions like 3(3)
 function handleMultiplication(expression) {
   const regex = /(\d+)\(/g;
-  expression = expression.replace(regex, '$1*(');
+  expression = expression.replace(regex, "$1*(");
   return expression;
 }
 
 // Function to calculate factorial
 function calculateFactorial(number) {
   if (number < 0) {
-    return 'Error';
+    return "Error";
   } else if (number === 0 || number === 1) {
     return 1;
   } else {
@@ -156,7 +180,6 @@ function calculateFactorial(number) {
     return factorial;
   }
 }
-
 
 // Function to calculate base-10 logarithm
 function log(number) {
@@ -175,12 +198,19 @@ function cos(number) {
 
 // Function tan
 function tan(number) {
-  if ((number % 180 === 90 && number % 360 !== 270) || (number % 180 === -90 && number % 360 !== -270)) {
-    return 'Error';
+  if (
+    (number % 180 === 90 && number % 360 !== 270) ||
+    (number % 180 === -90 && number % 360 !== -270)
+  ) {
+    return "Error";
   }
   return Math.tan((number * Math.PI) / 180);
 }
 
 function sqrt(number) {
   return Math.sqrt(number);
+}
+
+function ln(number) {
+  return Math.log(number);
 }
